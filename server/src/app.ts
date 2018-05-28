@@ -12,7 +12,10 @@ import mongoose from "mongoose";
 import passport from "passport";
 import expressValidator from "express-validator";
 import bluebird from "bluebird";
+import cors from "cors";
+import graphqlHTTP from "express-graphql";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
+const schema = require("./schema/schema");
 
 const MongoStore = mongo(session);
 
@@ -31,11 +34,14 @@ import * as passportConfig from "./config/passport";
 // Create Express server
 const app = express();
 
+// Allow cross-origin requests
+app.use(cors());
+
 // Connect to MongoDB
 const mongoUrl = MONGODB_URI;
 (<any>mongoose).Promise = bluebird;
 mongoose
-  .connect(mongoUrl, { useMongoClient: true })
+  .connect(mongoUrl)
   .then(() => {
     /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
   })
@@ -45,6 +51,15 @@ mongoose
     );
     // process.exit();
   });
+
+// bind express with graphql
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    graphiql: true
+  })
+);
 
 // Express configuration
 app.set("port", process.env.PORT || 5000);
