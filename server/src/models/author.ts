@@ -1,9 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
-const authorSchema = new Schema({
-  name: String,
-  age: Number
-});
-
-module.exports = mongoose.model("Author", authorSchema);
+import { prop, Typegoose } from "typegoose";
+export class Author extends Typegoose {
+  @prop() name?: string;
+  @prop() age?: number;
+}
