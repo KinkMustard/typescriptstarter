@@ -30,6 +30,10 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "generate":
+      "gql-gen --url http://localhost:3000/graphql --template ts --out ./src/types.d.ts",
+    "gen-types":
+      "apollo-codegen introspect-schema http://localhost:5000/graphql --output schema.json && apollo-codegen generate src/**/*.ts --schema schema.json --target typescript --output src/operation-result-types.ts"
   }
 }

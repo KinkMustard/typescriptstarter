@@ -10,15 +10,14 @@ import {
 //   getAuthorsQuery:
 // }
 
-class AddBook extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      genre: '',
-      authorId: ''
-    };
-  }
+interface Props {}
+class AddBook extends React.Component<Props> {
+  state = {
+    name: '',
+    genre: '',
+    authorId: ''
+  };
+
   displayAuthors() {
     var data = this.props.getAuthorsQuery;
     if (data.loading) {
