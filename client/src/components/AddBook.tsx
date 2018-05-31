@@ -1,29 +1,34 @@
-import * as React from 'react';
-import { graphql, compose } from 'react-apollo';
+import * as React from "react";
+import { ChildProps, compose, graphql, MutationFunc } from "react-apollo";
 import {
-  getAuthorsQuery,
   addBookMutation,
+  addBookMutationVariables,
+  getAuthorsQuery,
   getBooksQuery
-} from '../queries/queries';
+} from "../operation-result-types";
+import { addBook, getAuthors, getBooks } from "../queries/queries";
 
-// interface Props {
-//   getAuthorsQuery:
-// }
+interface Props {
+  addBook: MutationFunc<addBookMutation, addBookMutationVariables>;
+}
 
-interface Props {}
-class AddBook extends React.Component<Props> {
-  state = {
-    name: '',
-    genre: '',
-    authorId: ''
+class AddBook extends React.Component<ChildProps<Props, getAuthorsQuery>> {
+  public state = {
+    authorId: "",
+    genre: "",
+    name: ""
   };
 
-  displayAuthors() {
-    var data = this.props.getAuthorsQuery;
+  public displayAuthors = () => {
+    const { data } = this.props;
+    const { authors } = data;
+    // var data = this.props.getAuthors;
+    // const { getAuthorsQuery } = data;
+
     if (data.loading) {
       return <option disabled={true}>Loading authors</option>;
     } else {
-      return data.authors.map(author => {
+      return authors.map(author => {
         return (
           <option key={author.id} value={author.id}>
             {author.name}
@@ -32,21 +37,23 @@ class AddBook extends React.Component<Props> {
       });
     }
   }
-  submitForm(e) {
+
+  public submitForm = e => {
     e.preventDefault();
     // use the addBookMutation
-    this.props.addBookMutation({
+    this.props.addBook({
+      refetchQueries: [{ query: getBooks }],
       variables: {
-        name: this.state.name,
+        authorId: this.state.authorId,
         genre: this.state.genre,
-        authorId: this.state.authorId
-      },
-      refetchQueries: [{ query: getBooksQuery }]
+        name: this.state.name
+      }
     });
   }
-  render() {
+
+  public render() {
     return (
-      <form id="add-book" onSubmit={this.submitForm.bind(this)}>
+      <form id="add-book" onSubmit={this.submitForm}>
         <div className="field">
           <label>Book name:</label>
           <input
@@ -75,6 +82,8 @@ class AddBook extends React.Component<Props> {
 }
 
 export default compose(
-  graphql(getAuthorsQuery, { name: 'getAuthorsQuery' }),
-  graphql(addBookMutation, { name: 'addBookMutation' })
+  graphql<Props, getAuthorsQuery>(getAuthors),
+  graphql<Props, addBookMutation, addBookMutationVariables>(addBook, {
+    name: "addBook"
+  })
 )(AddBook);

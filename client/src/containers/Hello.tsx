@@ -1,8 +1,7 @@
-import Hello from '../components/Hello';
-import { Props } from '../components/Hello';
-import * as actions from '../actions/';
-import { StoreState } from '../types/index';
-import { connect, Dispatch } from 'react-redux';
+import { connect, Dispatch } from "react-redux";
+import * as actions from "../actions/";
+import Hello, { Props } from "../components/Hello";
+import { StoreState } from "../types/index";
 
 export function mapStateToProps({ enthusiasmLevel, languageName }: StoreState) {
   return {
@@ -15,8 +14,8 @@ export function mapDispatchToProps(
   dispatch: Dispatch<actions.EnthusiasmAction>
 ) {
   return {
-    onIncrement: () => dispatch(actions.incrementEnthusiasm()),
-    onDecrement: () => dispatch(actions.decrementEnthusiasm())
+    onDecrement: () => dispatch(actions.decrementEnthusiasm()),
+    onIncrement: () => dispatch(actions.incrementEnthusiasm())
   };
 }
 

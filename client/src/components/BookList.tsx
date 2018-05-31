@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import { getBooksQuery } from '../queries/queries';
+import * as React from "react";
+import { ChildProps, graphql } from "react-apollo";
+import { getBooksQuery } from "../operation-result-types";
+import { getBooks } from "../queries/queries";
 
 // components
-import BookDetails from './BookDetails';
+import BookDetails from "./BookDetails";
 
-class BookList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: null
-    };
-  }
-  displayBooks() {
-    var data = this.props.data;
+interface Props {}
+class BookList extends React.Component<ChildProps<Props, getBooksQuery>> {
+  public state = {
+    selected: null
+  };
+
+  public displayBooks() {
+    const data = this.props.data;
     if (data.loading) {
       return <div>Loading books...</div>;
     } else {
-      return data.books.map(book => {
+      return this.props.data.books.map(book => {
         return (
           <li key={book.id} onClick={e => this.setState({ selected: book.id })}>
             {book.name}
@@ -26,7 +26,7 @@ class BookList extends Component {
       });
     }
   }
-  render() {
+  public render() {
     return (
       <div>
         <ul id="book-list">{this.displayBooks()}</ul>
@@ -36,4 +36,4 @@ class BookList extends Component {
   }
 }
 
-export default graphql(getBooksQuery)(BookList);
+export default graphql<Props, getBooksQuery>(getBooks)(BookList);

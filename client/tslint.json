@@ -1,5 +1,5 @@
 {
-  "extends": ["tslint-react"],
+  "extends": ["tslint-react", "tslint:latest", "tslint-config-prettier"],
   "rules": {
     "align": [true, "parameters", "arguments", "statements"],
     "ban": false,
@@ -24,16 +24,7 @@
     "no-any": false,
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [
-      true,
-      "log",
-      "error",
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": false,
     "no-consecutive-blank-lines": true,
     "no-construct": true,
     "no-debugger": true,
@@ -53,7 +44,7 @@
       "check-open-brace",
       "check-whitespace"
     ],
-    "quotemark": [true, "single", "jsx-double"],
+    "quotemark": [true, "double", "jsx-double"],
     "radix": true,
     "semicolon": [true, "always"],
     "switch-default": true,
@@ -88,6 +79,8 @@
       "check-separator",
       "check-type",
       "check-typecast"
-    ]
+    ],
+    "no-empty-interface": false,
+    "no-var-requires": false
   }
 }

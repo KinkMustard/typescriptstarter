@@ -1,9 +1,16 @@
-import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import { getBookQuery } from '../queries/queries';
+import * as React from "react";
+import { ChildProps, graphql } from "react-apollo";
+import { getBookQuery, getBookQueryVariables } from "../operation-result-types";
+import { getBook } from "../queries/queries";
 
-class BookDetails extends Component {
-  displayBookDetails() {
+interface Props {
+  bookId: number;
+}
+
+class BookDetails extends React.Component<
+  ChildProps<Props, getBookQuery, getBookQueryVariables>
+> {
+  public displayBookDetails() {
     const { book } = this.props.data;
     if (book) {
       return (
@@ -23,12 +30,12 @@ class BookDetails extends Component {
       return <div>No book selected...</div>;
     }
   }
-  render() {
+  public render() {
     return <div id="book-details">{this.displayBookDetails()}</div>;
   }
 }
 
-export default graphql(getBookQuery, {
+export default graphql<Props, getBookQuery>(getBook, {
   options: props => {
     return {
       variables: {
