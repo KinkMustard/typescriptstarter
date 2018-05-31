@@ -28,6 +28,18 @@ export interface addBookMutation {
   } | null,
 };
 
+export interface addAuthorMutationVariables {
+  name: string,
+  age: number,
+};
+
+export interface addAuthorMutation {
+  addAuthor:  {
+    name: string | null,
+    age: number | null,
+  } | null,
+};
+
 export interface getBookQueryVariables {
   id?: string | null,
 };

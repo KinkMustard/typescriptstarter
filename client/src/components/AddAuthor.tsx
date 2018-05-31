@@ -1,47 +1,32 @@
 import * as React from "react";
 import { ChildProps, compose, graphql, MutationFunc } from "react-apollo";
 import {
-  addBookMutation,
-  addBookMutationVariables,
+  addAuthorMutation,
+  addAuthorMutationVariables,
   getAuthorsQuery,
   getBooksQuery
 } from "../operation-result-types";
 import { addBook, getAuthors, getBooks } from "../queries/queries";
 
 interface Props {
-  addBook: MutationFunc<addBookMutation, addBookMutationVariables>;
+  addBook: MutationFunc<addAuthorMutation, addAuthorMutationVariables>;
 }
 
-class AddBook extends React.Component<ChildProps<Props, getAuthorsQuery>> {
+class AddBook extends React.Component<
+  ChildProps<Props, getAuthorsQuery, getBooksQuery>
+> {
   public state = {
+    age: 0,
     authorId: "",
-    genre: "",
     name: ""
   };
-
-  public displayAuthors = () => {
-    const { data } = this.props;
-    const { authors } = data;
-    if (data.loading) {
-      return <option disabled={true}>Loading authors</option>;
-    } else {
-      return authors.map(author => {
-        return (
-          <option key={author.id} value={author.id}>
-            {author.name}
-          </option>
-        );
-      });
-    }
-  }
 
   public submitForm = e => {
     e.preventDefault();
     this.props.addBook({
       refetchQueries: [{ query: getBooks }],
       variables: {
-        authorId: this.state.authorId,
-        genre: this.state.genre,
+        age: this.state.age,
         name: this.state.name
       }
     });
@@ -51,25 +36,18 @@ class AddBook extends React.Component<ChildProps<Props, getAuthorsQuery>> {
     return (
       <form id="add-book" onSubmit={this.submitForm}>
         <div className="field">
-          <label>Book name:</label>
+          <label>Author name:</label>
           <input
             type="text"
             onChange={e => this.setState({ name: e.target.value })}
           />
         </div>
         <div className="field">
-          <label>Genre:</label>
+          <label>Age:</label>
           <input
             type="text"
             onChange={e => this.setState({ genre: e.target.value })}
           />
-        </div>
-        <div className="field">
-          <label>Author:</label>
-          <select onChange={e => this.setState({ authorId: e.target.value })}>
-            <option>Select author</option>
-            {this.displayAuthors()}
-          </select>
         </div>
         <button>+</button>
       </form>
@@ -79,7 +57,7 @@ class AddBook extends React.Component<ChildProps<Props, getAuthorsQuery>> {
 
 export default compose(
   graphql<Props, getAuthorsQuery>(getAuthors),
-  graphql<Props, addBookMutation, addBookMutationVariables>(addBook, {
+  graphql<Props, addAuthorMutation, addAuthorMutationVariables>(addBook, {
     name: "addBook"
   })
 )(AddBook);

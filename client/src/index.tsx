@@ -11,7 +11,7 @@ import { enthusiasm } from "./reducers/index";
 import { StoreState } from "./types/index";
 
 import App from "./App";
-import "./index.css";
+import "./index.scss";
 
 if (module.hot) {
   module.hot.accept();

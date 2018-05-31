@@ -27,6 +27,15 @@ const addBook = gql`
   }
 `;
 
+const addAuthor = gql`
+  mutation addAuthor($name: String!, $age: Int!) {
+    addAuthor(name: $name, age: $age) {
+      name
+      age
+    }
+  }
+`;
+
 const getBook = gql`
   query getBook($id: ID) {
     book(id: $id) {
