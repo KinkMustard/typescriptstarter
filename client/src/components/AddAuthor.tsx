@@ -7,6 +7,7 @@ import {
   getBooksQuery
 } from "../operation-result-types";
 import { addBook, getAuthors, getBooks } from "../queries/queries";
+import "./AddAuthor.css";
 
 interface Props {
   addBook: MutationFunc<addAuthorMutation, addAuthorMutationVariables>;

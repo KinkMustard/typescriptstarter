@@ -2,6 +2,7 @@ import * as React from "react";
 import { ChildProps, graphql } from "react-apollo";
 import { getBookQuery, getBookQueryVariables } from "../operation-result-types";
 import { getBook } from "../queries/queries";
+import "./BookDetails.css";
 
 interface Props {
   bookId: number;

@@ -2,6 +2,7 @@ import * as React from "react";
 import { ChildProps, graphql } from "react-apollo";
 import { getBooksQuery } from "../operation-result-types";
 import { getBooks } from "../queries/queries";
+import "./BookList.css";
 
 // components
 import BookDetails from "./BookDetails";

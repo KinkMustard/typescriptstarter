@@ -11,7 +11,7 @@ import { enthusiasm } from "./reducers/index";
 import { StoreState } from "./types/index";
 
 import App from "./App";
-import "./index.scss";
+import "./index.css";
 
 if (module.hot) {
   module.hot.accept();
@@ -26,7 +26,7 @@ const client = new ApolloClient({
 
 const store = createStore<StoreState, EnthusiasmAction, any, any>(enthusiasm, {
   enthusiasmLevel: 0,
-  languageName: "TypeScript"
+  languageName: "lit fam"
 });
 
 ReactDOM.render(
