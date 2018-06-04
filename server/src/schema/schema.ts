@@ -1,6 +1,6 @@
 const graphql = require("graphql");
-import { Book } from "../models/book";
 import { Author } from "../models/Author";
+import { Book } from "../models/book";
 const _ = require("lodash");
 
 const BookModel = new Book().getModelForClass(Book);

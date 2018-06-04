@@ -1,19 +1,19 @@
-import express from "express";
-import compression from "compression"; // compresses requests
-import session from "express-session";
+import bluebird from "bluebird";
 import bodyParser from "body-parser";
-import logger from "./util/logger";
-import lusca from "lusca";
-import dotenv from "dotenv";
+import compression from "compression"; // compresses requests
 import mongo from "connect-mongo";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import flash from "express-flash";
-import path from "path";
+import graphqlHTTP from "express-graphql";
+import session from "express-session";
+import expressValidator from "express-validator";
+import lusca from "lusca";
 import mongoose from "mongoose";
 import passport from "passport";
-import expressValidator from "express-validator";
-import bluebird from "bluebird";
-import cors from "cors";
-import graphqlHTTP from "express-graphql";
+import path from "path";
+import logger from "./util/logger";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 const schema = require("./schema/schema");
 
@@ -23,10 +23,10 @@ const MongoStore = mongo(session);
 dotenv.config({ path: ".env.example" });
 
 // Controllers (route handlers)
-import * as homeController from "./controllers/home";
-import * as userController from "./controllers/user";
 import * as apiController from "./controllers/api";
 import * as contactController from "./controllers/contact";
+import * as homeController from "./controllers/home";
+import * as userController from "./controllers/user";
 
 // API keys and Passport configuration
 import * as passportConfig from "./config/passport";
@@ -39,19 +39,20 @@ app.use(cors());
 
 // Connect to MongoDB
 const mongoUrl = MONGODB_URI;
-(<any>mongoose).Promise = bluebird;
-mongoose
-  .connect(mongoUrl)
-  .then(() => {
-    /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
-  })
-  .catch(err => {
-    console.log(
-      "MongoDB connection error. Please make sure MongoDB is running. " + err
-    );
-    // process.exit();
-  });
-
+(mongoose as any).Promise = bluebird;
+mongoose.connect(mongoUrl);
+// .then(() => {
+//   /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+// })
+// .catch(err => {
+//   console.log(
+//     "MongoDB connection error. Please make sure MongoDB is running. " + err
+//   );
+// process.exit();
+// });
+mongoose.connection
+  .once("open", () => console.log("Connected to MongoLab instance."))
+  .on("error", error => console.log("Error connecting to MongoLab:", error));
 // bind express with graphql
 app.use(
   "/graphql",
@@ -99,7 +100,7 @@ app.use((req, res, next) => {
     !req.path.match(/\./)
   ) {
     req.session.returnTo = req.path;
-  } else if (req.user && req.path == "/account") {
+  } else if (req.user && req.path === "/account") {
     req.session.returnTo = req.path;
   }
   next();
