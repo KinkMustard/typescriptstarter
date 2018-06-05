@@ -10,6 +10,7 @@ import Hello from "./containers/Hello";
 import { enthusiasm } from "./reducers/index";
 import { StoreState } from "./types/index";
 
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 
@@ -32,7 +33,9 @@ const store = createStore<StoreState, EnthusiasmAction, any, any>(enthusiasm, {
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </ApolloProvider>,
   document.getElementById("root") as HTMLElement

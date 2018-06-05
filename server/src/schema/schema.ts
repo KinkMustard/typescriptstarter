@@ -1,6 +1,7 @@
 const graphql = require("graphql");
-import { Book } from "../models/book";
 import { Author } from "../models/Author";
+import { Book } from "../models/book";
+import { default as User } from "../models/User";
 const _ = require("lodash");
 
 const BookModel = new Book().getModelForClass(Book);
@@ -15,6 +16,38 @@ const {
   GraphQLList,
   GraphQLNonNull
 } = graphql;
+
+const AuthTokenType = new GraphQLObjectType({
+  name: "AuthToken",
+  fields: () => ({
+    accessToken: { type: GraphQLString },
+    kind: { type: GraphQLString }
+  })
+});
+
+const ProfileType = new GraphQLObjectType({
+  name: "Profile",
+  fields: () => ({
+    name: { type: GraphQLString },
+    gender: { type: GraphQLString },
+    location: { type: GraphQLString },
+    website: { type: GraphQLString },
+    picture: { type: GraphQLString }
+  })
+});
+
+const UserType = new GraphQLObjectType({
+  name: "User",
+  fields: () => ({
+    email: { type: GraphQLString },
+    password: { type: GraphQLString },
+    passwordResetToken: { type: GraphQLString },
+    passwordResetExpires: { type: GraphQLString },
+    facebook: { type: GraphQLString },
+    tokens: { type: [AuthTokenType] },
+    profile: { type: ProfileType }
+  })
+});
 
 const BookType = new GraphQLObjectType({
   name: "Book",
@@ -49,6 +82,13 @@ const AuthorType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
+    user: {
+      type: UserType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return User.findById(args.id);
+      }
+    },
     book: {
       type: BookType,
       args: { id: { type: GraphQLID } },
@@ -74,6 +114,12 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         return AuthorModel.find({});
       }
+    },
+    users: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        return User.find({});
+      }
     }
   }
 });
@@ -81,6 +127,20 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
+    createNewUser: {
+      type: UserType,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      resolve(parent, args) {
+        const user = new User({
+          email: args.email,
+          password: args.password
+        });
+        return user.save();
+      }
+    },
     addAuthor: {
       type: AuthorType,
       args: {

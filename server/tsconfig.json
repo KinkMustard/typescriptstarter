@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["esnext.asynciterable"],
+    "lib": ["es6", "dom", "esnext.asynciterable"],
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
